@@ -8,7 +8,7 @@ export class PurchaseOrdersController {
 
   @Get()
   findAll() {
-    return this.purchaseOrdersService.findAll();
+    return this.purchaseOrdersService.findAllSorted();
   }
 
   @Get(':sortBy')

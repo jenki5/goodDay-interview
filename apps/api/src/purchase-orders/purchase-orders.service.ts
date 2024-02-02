@@ -7,11 +7,16 @@ export class PurchaseOrdersService {
   constructor(private prisma: PrismaService) {
   }
 
-  async findAll(): Promise<PurchaseOrders[]> {
-    return (await this.prisma.purchaseOrders.findMany({include: {purchase_order_line_items: true}})).sort((a, b) => new Date(a.expected_delivery_date).getTime() - new Date(b.expected_delivery_date).getTime());
-  }
-
-  async findAllSorted(sortBy: string): Promise<PurchaseOrders[]> {
-    return (await this.prisma.purchaseOrders.findMany({include: {purchase_order_line_items: true}})).sort((a, b) => 0 - (b[sortBy] > a[sortBy] ? 1 : -1));
+  async findAllSorted(sortBy = "expected_delivery_date"): Promise<PurchaseOrders[]> {
+    return (await this.prisma.purchaseOrders.findMany({orderBy: [
+      {
+        [sortBy]: 'asc',
+      },
+      {
+        vendor_name: 'asc',
+      },
+    ],
+    include: {purchase_order_line_items: true}
+    }));
   }
 }
